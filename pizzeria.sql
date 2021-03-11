@@ -1,5 +1,4 @@
-
-CREATE SCHEMA IF NOT EXISTS `Pizzeria` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `Pizzeria`;
 USE `Pizzeria` ;
 
 
@@ -15,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `Pizzeria`.`localidades` (
   `nombre` VARCHAR(45) NOT NULL,
   `Provincias_id_Provincias` SMALLINT NOT NULL,
   PRIMARY KEY (`id_localidades`),
-  INDEX `fk_localidades_Provincias_idx` (`Provincias_id_Provincias` ASC) VISIBLE,
+  INDEX `fk_localidades_Provincias_idx` (`Provincias_id_Provincias` ASC) ,
   CONSTRAINT `fk_localidades_Provincias`
     FOREIGN KEY (`Provincias_id_Provincias`)
     REFERENCES `Pizzeria`.`Provincias` (`id_Provincias`)
@@ -31,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `Pizzeria`.`clientes` (
   `codigo_postal` VARCHAR(5) NULL,
   `localidades_id_localidades` INT NOT NULL,
   PRIMARY KEY (`id_clientes`),
-  INDEX `fk_clientes_localidades1_idx` (`localidades_id_localidades` ASC) VISIBLE,
+  INDEX `fk_clientes_localidades1_idx` (`localidades_id_localidades` ASC),
   CONSTRAINT `fk_clientes_localidades1`
     FOREIGN KEY (`localidades_id_localidades`)
     REFERENCES `Pizzeria`.`localidades` (`id_localidades`)
@@ -45,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `Pizzeria`.`Tiendas` (
   `cod_postal` VARCHAR(5) NULL,
   `localidades_id_localidades` INT NOT NULL,
   PRIMARY KEY (`id_Tiendas`),
-  INDEX `fk_Tiendas_localidades1_idx` (`localidades_id_localidades` ASC) VISIBLE,
+  INDEX `fk_Tiendas_localidades1_idx` (`localidades_id_localidades` ASC),
   CONSTRAINT `fk_Tiendas_localidades1`
     FOREIGN KEY (`localidades_id_localidades`)
     REFERENCES `Pizzeria`.`localidades` (`id_localidades`)
@@ -53,9 +52,6 @@ CREATE TABLE IF NOT EXISTS `Pizzeria`.`Tiendas` (
     ON UPDATE NO ACTION);
 
 
--- -----------------------------------------------------
--- Table `Pizzeria`.`pedidos`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Pizzeria`.`pedidos` (
   `id_pedidos` INT NOT NULL AUTO_INCREMENT,
   `fecha_hora` TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -105,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`entregas` (
   `fecha/hora` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `pedidos_id_pedidos` INT NOT NULL,
   PRIMARY KEY (`empleados_id_empleados`, `pedidos_id_pedidos`),
-  INDEX `fk_entregas_pedidos1_idx` (`pedidos_id_pedidos` ASC) VISIBLE,
+  INDEX `fk_entregas_pedidos1_idx` (`pedidos_id_pedidos` ASC) ,
   CONSTRAINT `fk_entregas_empleados1`
     FOREIGN KEY (`empleados_id_empleados`)
     REFERENCES `pizzeria`.`empleados` (`id_empleados`),
@@ -147,9 +143,9 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`detalle` (
   `productos_id_productos` INT NULL DEFAULT NULL,
   `Pizzas_id_Pizzas` INT NULL DEFAULT NULL,
   PRIMARY KEY (`pedidos_id_pedidos`, `id_detalle`),
-  INDEX `fk_detalle_pedidos1_idx` (`pedidos_id_pedidos` ASC) VISIBLE,
-  INDEX `fk_detalle_productos1_idx` (`productos_id_productos` ASC) VISIBLE,
-  INDEX `fk_detalle_Pizzas1_idx` (`Pizzas_id_Pizzas` ASC) VISIBLE,
+  INDEX `fk_detalle_pedidos1_idx` (`pedidos_id_pedidos` ASC) ,
+  INDEX `fk_detalle_productos1_idx` (`productos_id_productos` ASC) ,
+  INDEX `fk_detalle_Pizzas1_idx` (`Pizzas_id_Pizzas` ASC) ,
   CONSTRAINT `fk_detalle_pedidos1`
     FOREIGN KEY (`pedidos_id_pedidos`)
     REFERENCES `pizzeria`.`pedidos` (`id_pedidos`),
