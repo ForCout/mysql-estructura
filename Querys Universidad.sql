@@ -30,4 +30,7 @@ SELECT g.nombre AS Grado,a.tipo, SUM(a.creditos) AS Total_Creditos FROM grado g 
 SELECT anyo_inicio, COUNT(id_alumno) AS NºAlumnos FROM curso_escolar JOIN alumno_se_matricula_asignatura ON id_curso_escolar = id GROUP BY anyo_inicio;
 SELECT p.id,p.nombre,p.apellido1,p.apellido2,COUNT(a.id_profesor)AS NºAsignaturas FROM  asignatura a  right JOIN profesor pr ON  pr.id_profesor = a.id_profesor join persona p on p.id = pr.id_profesor  GROUP BY pr.id_profesor ORDER BY NºAsignaturas DESC;
 SELECT * FROM persona WHERE fecha_nacimiento = (SELECT MAX(fecha_nacimiento) FROM persona) AND tipo = 'alumno';
+SELECT * FROM persona WHERE fecha_nacimiento = (SELECT MAX(fecha_nacimiento) FROM persona) AND tipo = 'alumno';
+SELECT pr.id_profesor,p.nombre,p.apellido1,p.apellido2 FROM profesor pr JOIN persona p ON p.id=pr.id_profesor JOIN departamento d ON d.id = pr.id_departamento where  NOT exists (select a.id_profesor from asignatura a where _profesor
+
 SELECT pr.id_profesor,p.nombre,p.apellido1,p.apellido2 FROM profesor pr JOIN persona p ON p.id=pr.id_profesor JOIN departamento d ON d.id = pr.id_departamento where  NOT exists (select a.id_profesor from asignatura a where a.id_profesor=pr.id_profesor);
