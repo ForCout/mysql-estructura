@@ -1,4 +1,3 @@
-
 CREATE SCHEMA IF NOT EXISTS `spotify`;
 USE `spotify` ;
 
