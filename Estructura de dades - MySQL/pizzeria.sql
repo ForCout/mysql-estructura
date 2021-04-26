@@ -1,30 +1,31 @@
-CREATE SCHEMA IF NOT EXISTS `Pizzeria`;
-USE `Pizzeria` ;
+DROP SCHEMA IF EXISTS `pizzeria`;
+CREATE SCHEMA IF NOT EXISTS `pizzeria`;
+USE `pizzeria` ;
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`Provincias` (
-  `id_Provincias` SMALLINT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `pizzeria`.`provincias` (
+  `id_provincias` SMALLINT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_Provincias`));
+  PRIMARY KEY (`id_provincias`));
 
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`localidades` (
+CREATE TABLE IF NOT EXISTS `pizzeria`.`localidades` (
   `id_localidades` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
-  `Provincias_id_Provincias` SMALLINT NOT NULL,
+  `provincias_id_provincias` SMALLINT NOT NULL,
   PRIMARY KEY (`id_localidades`),
-  INDEX `fk_localidades_Provincias_idx` (`Provincias_id_Provincias` ASC) ,
-  CONSTRAINT `fk_localidades_Provincias`
-    FOREIGN KEY (`Provincias_id_Provincias`)
-    REFERENCES `Pizzeria`.`Provincias` (`id_Provincias`)
+  INDEX `fk_localidades_provincias_idx` (`provincias_id_provincias` ASC) ,
+  CONSTRAINT `fk_localidades_provincias`
+    FOREIGN KEY (`provincias_id_provincias`)
+    REFERENCES `pizzeria`.`provincias` (`id_provincias`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`clientes` (
+CREATE TABLE IF NOT EXISTS `pizzeria`.`clientes` (
   `id_clientes` INT NOT NULL AUTO_INCREMENT,
-  `Nombre` VARCHAR(45) NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
   `apellidos` VARCHAR(45) NOT NULL,
   `direccion` TEXT NULL,
   `codigo_postal` VARCHAR(5) NULL,
@@ -33,64 +34,64 @@ CREATE TABLE IF NOT EXISTS `Pizzeria`.`clientes` (
   INDEX `fk_clientes_localidades1_idx` (`localidades_id_localidades` ASC),
   CONSTRAINT `fk_clientes_localidades1`
     FOREIGN KEY (`localidades_id_localidades`)
-    REFERENCES `Pizzeria`.`localidades` (`id_localidades`)
+    REFERENCES `pizzeria`.`localidades` (`id_localidades`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`Tiendas` (
-  `id_Tiendas` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `pizzeria`.`tiendas` (
+  `id_tiendas` INT NOT NULL AUTO_INCREMENT,
   `direccion` VARCHAR(145) NULL,
   `cod_postal` VARCHAR(5) NULL,
   `localidades_id_localidades` INT NOT NULL,
   PRIMARY KEY (`id_Tiendas`),
-  INDEX `fk_Tiendas_localidades1_idx` (`localidades_id_localidades` ASC),
-  CONSTRAINT `fk_Tiendas_localidades1`
+  INDEX `fk_tiendas_localidades1_idx` (`localidades_id_localidades` ASC),
+  CONSTRAINT `fk_tiendas_localidades1`
     FOREIGN KEY (`localidades_id_localidades`)
-    REFERENCES `Pizzeria`.`localidades` (`id_localidades`)
+    REFERENCES `pizzeria`.`localidades` (`id_localidades`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`pedidos` (
+CREATE TABLE IF NOT EXISTS `pizzeria`.`pedidos` (
   `id_pedidos` INT NOT NULL AUTO_INCREMENT,
   `fecha_hora` TIMESTAMP NOT NULL DEFAULT current_timestamp,
   `entrega` ENUM('local', 'domicilio') NULL,
   `clientes_id_clientes` INT NOT NULL,
-  `Tiendas_id_Tiendas` INT NOT NULL,
+  `tiendas_id_tiendas` INT NOT NULL,
   PRIMARY KEY (`id_pedidos`),
   INDEX `fk_pedidos_clientes1_idx` (`clientes_id_clientes` ASC),
-  INDEX `fk_pedidos_Tiendas1_idx` (`Tiendas_id_Tiendas` ASC),
+  INDEX `fk_pedidos_tiendas1_idx` (`tiendas_id_tiendas` ASC),
   CONSTRAINT `fk_pedidos_clientes1`
     FOREIGN KEY (`clientes_id_clientes`)
-    REFERENCES `Pizzeria`.`clientes` (`id_clientes`)
+    REFERENCES `pizzeria`.`clientes` (`id_clientes`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedidos_Tiendas1`
-    FOREIGN KEY (`Tiendas_id_Tiendas`)
-    REFERENCES `Pizzeria`.`Tiendas` (`id_Tiendas`)
+  CONSTRAINT `fk_pedidos_tiendas1`
+    FOREIGN KEY (`tiendas_id_tiendas`)
+    REFERENCES `pizzeria`.`tiendas` (`id_tiendas`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`empleados` (
+CREATE TABLE IF NOT EXISTS `pizzeria`.`empleados` (
   `id_empleados` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NULL,
   `apellidos` VARCHAR(45) NULL,
   `nif` VARCHAR(15) NULL,
   `telefono` VARCHAR(15) NULL,
   `cargo` ENUM('cocinero', 'repartidor') NULL,
-  `Tiendas_id_Tiendas` INT NOT NULL,
+  `tiendas_id_tiendas` INT NOT NULL,
   PRIMARY KEY (`id_empleados`),
-  INDEX `fk_empleados_Tiendas1_idx` (`Tiendas_id_Tiendas` ASC),
-  CONSTRAINT `fk_empleados_Tiendas1`
-    FOREIGN KEY (`Tiendas_id_Tiendas`)
-    REFERENCES `Pizzeria`.`Tiendas` (`id_Tiendas`)
+  INDEX `fk_empleados_tiendas1_idx` (`tiendas_id_tiendas` ASC),
+  CONSTRAINT `fk_empleados_tiendas1`
+    FOREIGN KEY (`tiendas_id_tiendas`)
+    REFERENCES `pizzeria`.`tiendas` (`id_tiendas`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`categoria_pizza` (
+CREATE TABLE IF NOT EXISTS `pizzeria`.`categoria_pizza` (
   `id_categoria_pizza` SMALLINT NOT NULL,
   `categoria_pizza` VARCHAR(45) NULL,
   PRIMARY KEY (`id_categoria_pizza`));
@@ -120,18 +121,18 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`productos` (
   PRIMARY KEY (`id_productos`));
 
 
-CREATE TABLE IF NOT EXISTS `Pizzeria`.`Pizzas` (
-  `id_Pizzas` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `pizzeria`.`pizzas` (
+  `id_pizzas` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `descripcion` TEXT NOT NULL,
   `imagen` BLOB NULL,
   `precio` FLOAT NOT NULL,
   `categoria_pizza_id_categoria_pizza` SMALLINT NOT NULL,
-  PRIMARY KEY (`id_Pizzas`),
-  INDEX `fk_Pizzas_categoria_pizza1_idx` (`categoria_pizza_id_categoria_pizza` ASC),
-  CONSTRAINT `fk_Pizzas_categoria_pizza1`
+  PRIMARY KEY (`id_pizzas`),
+  INDEX `fk_pizzas_categoria_pizza1_idx` (`categoria_pizza_id_categoria_pizza` ASC),
+  CONSTRAINT `fk_pizzas_categoria_pizza1`
     FOREIGN KEY (`categoria_pizza_id_categoria_pizza`)
-    REFERENCES `Pizzeria`.`categoria_pizza` (`id_categoria_pizza`)
+    REFERENCES `pizzeria`.`categoria_pizza` (`id_categoria_pizza`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -141,17 +142,17 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`detalle` (
   `cantidad` SMALLINT NULL DEFAULT NULL,
   `precio_total` FLOAT NULL DEFAULT NULL,
   `productos_id_productos` INT NULL DEFAULT NULL,
-  `Pizzas_id_Pizzas` INT NULL DEFAULT NULL,
+  `pizzas_id_pizzas` INT NULL DEFAULT NULL,
   PRIMARY KEY (`pedidos_id_pedidos`, `id_detalle`),
   INDEX `fk_detalle_pedidos1_idx` (`pedidos_id_pedidos` ASC) ,
   INDEX `fk_detalle_productos1_idx` (`productos_id_productos` ASC) ,
-  INDEX `fk_detalle_Pizzas1_idx` (`Pizzas_id_Pizzas` ASC) ,
+  INDEX `fk_detalle_pizzas1_idx` (`pizzas_id_pizzas` ASC) ,
   CONSTRAINT `fk_detalle_pedidos1`
     FOREIGN KEY (`pedidos_id_pedidos`)
     REFERENCES `pizzeria`.`pedidos` (`id_pedidos`),
-  CONSTRAINT `fk_detalle_Pizzas1`
-    FOREIGN KEY (`Pizzas_id_Pizzas`)
-    REFERENCES `pizzeria`.`pizzas` (`id_Pizzas`),
+  CONSTRAINT `fk_detalle_pizzas1`
+    FOREIGN KEY (`pizzas_id_pizzas`)
+    REFERENCES `pizzeria`.`pizzas` (`id_pizzas`),
   CONSTRAINT `fk_detalle_productos1`
     FOREIGN KEY (`productos_id_productos`)
     REFERENCES `pizzeria`.`productos` (`id_productos`));
@@ -161,11 +162,11 @@ INSERT INTO provincias (nombre) VALUES ('Tarragona');
 INSERT INTO provincias (nombre) VALUES ('Lerida');
 INSERT INTO provincias (nombre) VALUES ('Gerona');
     
-INSERT INTO localidades (nombre,Provincias_id_Provincias) VALUES ('Barcelona',1);INSERT INTO localidades (nombre,Provincias_id_Provincias) VALUES ('Hospitalet',1);
-INSERT INTO localidades (nombre,Provincias_id_Provincias) VALUES ('Reus',2);  
-INSERT INTO localidades (nombre,Provincias_id_Provincias) VALUES ('Tarragona',2);
-INSERT INTO localidades (nombre,Provincias_id_Provincias) VALUES ('Lerida',3);
-INSERT INTO localidades (nombre,Provincias_id_Provincias) VALUES ('Cadaques',4);
+INSERT INTO localidades (nombre,provincias_id_provincias) VALUES ('Barcelona',1);INSERT INTO localidades (nombre,provincias_id_provincias) VALUES ('Hospitalet',1);
+INSERT INTO localidades (nombre,provincias_id_provincias) VALUES ('Reus',2);  
+INSERT INTO localidades (nombre,provincias_id_provincias) VALUES ('Tarragona',2);
+INSERT INTO localidades (nombre,provincias_id_provincias) VALUES ('Lerida',3);
+INSERT INTO localidades (nombre,provincias_id_provincias) VALUES ('Cadaques',4);
     
 INSERT INTO clientes (nombre,apellidos,direccion,codigo_postal,localidades_id_localidades) VALUES ('Antonio','Garcia','Via julia','08016',1);
 INSERT INTO clientes (nombre,apellidos,direccion,codigo_postal,localidades_id_localidades) VALUES ('Pedro','Martinez','Diagonal','08032',2);
@@ -176,17 +177,17 @@ INSERT INTO tiendas (direccion,cod_postal,localidades_id_localidades) VALUES ('G
 INSERT INTO tiendas (direccion,cod_postal,localidades_id_localidades) VALUES ('constitucion',08032,2);
 INSERT INTO tiendas (direccion,cod_postal,localidades_id_localidades) VALUES ('diagonal',08021,3);
     
-INSERT INTO pedidos (entrega,clientes_id_clientes,Tiendas_id_Tiendas) VALUES ('domicilio',1,1);
-INSERT INTO pedidos (entrega,clientes_id_clientes,Tiendas_id_Tiendas) VALUES ('domicilio',2,1);
-INSERT INTO pedidos (entrega,clientes_id_clientes,Tiendas_id_Tiendas) VALUES ('domicilio',1,1);
-INSERT INTO pedidos (entrega,clientes_id_clientes,Tiendas_id_Tiendas) VALUES ('domicilio',3,2);
-INSERT INTO pedidos (entrega,clientes_id_clientes,Tiendas_id_Tiendas) VALUES ('domicilio',4,3);
-INSERT INTO pedidos (entrega,clientes_id_clientes,Tiendas_id_Tiendas) VALUES ('domicilio',2,1);
+INSERT INTO pedidos (entrega,clientes_id_clientes,tiendas_id_tiendas) VALUES ('domicilio',1,1);
+INSERT INTO pedidos (entrega,clientes_id_clientes,tiendas_id_tiendas) VALUES ('domicilio',2,1);
+INSERT INTO pedidos (entrega,clientes_id_clientes,tiendas_id_tiendas) VALUES ('domicilio',1,1);
+INSERT INTO pedidos (entrega,clientes_id_clientes,tiendas_id_tiendas) VALUES ('domicilio',3,2);
+INSERT INTO pedidos (entrega,clientes_id_clientes,tiendas_id_tiendas) VALUES ('domicilio',4,3);
+INSERT INTO pedidos (entrega,clientes_id_clientes,tiendas_id_tiendas) VALUES ('domicilio',2,1);
          
 	
-INSERT INTO empleados(nombre,apellidos,nif,telefono,cargo,Tiendas_id_Tiendas) VALUES ('Antonio','Perez','43526786',654378652,'repartidor',1);
-INSERT INTO empleados(nombre,apellidos,nif,telefono,cargo,Tiendas_id_Tiendas) VALUES ('Pepe','Perez','43526787',654378652,'repartidor',2);
-INSERT INTO empleados(nombre,apellidos,nif,telefono,cargo,Tiendas_id_Tiendas) VALUES ('Manuel','Perez','43526788',654378652,'repartidor',3);
+INSERT INTO empleados(nombre,apellidos,nif,telefono,cargo,tiendas_id_tiendas) VALUES ('Antonio','Perez','43526786',654378652,'repartidor',1);
+INSERT INTO empleados(nombre,apellidos,nif,telefono,cargo,tiendas_id_tiendas) VALUES ('Pepe','Perez','43526787',654378652,'repartidor',2);
+INSERT INTO empleados(nombre,apellidos,nif,telefono,cargo,tiendas_id_tiendas) VALUES ('Manuel','Perez','43526788',654378652,'repartidor',3);
  
 INSERT INTO categoria_pizza VALUES (1,'MASA GRUESA');
 INSERT INTO categoria_pizza VALUES (2,'MASA FINA');
@@ -213,14 +214,13 @@ INSERT INTO detalle (pedidos_id_pedidos,id_detalle,cantidad,precio_total,product
 INSERT INTO detalle (pedidos_id_pedidos,id_detalle,cantidad,precio_total,productos_id_productos) VALUES (4,1,2,2.40,2);
 INSERT INTO detalle (pedidos_id_pedidos,id_detalle,cantidad,precio_total,productos_id_productos) VALUES (5,1,2,2.40,2);
 INSERT INTO detalle (pedidos_id_pedidos,id_detalle,cantidad,precio_total,productos_id_productos) VALUES (6,1,2,2.40,1);
-INSERT INTO detalle (pedidos_id_pedidos,id_detalle,cantidad,precio_total,Pizzas_id_Pizzas) VALUES (1,2,2,19.8,1);
+INSERT INTO detalle (pedidos_id_pedidos,id_detalle,cantidad,precio_total,pizzas_id_pizzas) VALUES (1,2,2,19.8,1);
     
     /* Querys utilizadas*/
    /* Llista quants productes de categoria 'Begudas' s'han venut en una determinada localitat*/
    
 SELECT pr.nombre,d.cantidad,t.id_tiendas FROM detalle d,productos pr,pedidos p,tiendas t WHERE categoria ='Bebida' and id_productos = productos_id_productos
-and pedidos_id_pedidos = id_pedidos and id_Tiendas = Tiendas_id_Tiendas and localidades_id_localidades=1;
+and pedidos_id_pedidos = id_pedidos and id_tiendas = tiendas_id_tiendas and localidades_id_localidades=1;
    
 	/* Llista quantes comandes ha efectuat un determinat empleat */
 SELECT * FROM entregas WHERE empleados_id_empleados = 1;
-    
